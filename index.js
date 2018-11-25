@@ -60,6 +60,7 @@ const scrape = (html) => {
 app.get('/', (req, res) => {
     const username = req.query.u;
     const pass = req.query.p;
+    const start = Math.round(new Date() / 1000);
     access(username, pass)
     .then(result => {
         if(result) {
@@ -69,10 +70,12 @@ app.get('/', (req, res) => {
                         console.log(`Novo login de usuário! ${new Date()}`)
                     })};
                 res.setHeader('Content-Type', 'application/json; charset=utf-8');
-                scrape(result).write().pipe(res)
+                scrape(result).write().pipe(res);
+                console.log("Done in " + (Math.round(new Date() / 1000) - start) + "s");
             })
         } else {
             res.send({ error: 'Nome de usuário ou senha inválidos'})
+            console.log("Done in " + (Math.round(new Date() / 1000) - start) + "s");
         }
     });
 });
