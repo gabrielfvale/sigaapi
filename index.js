@@ -34,7 +34,7 @@ const access = (username, password) => {
         browser.fill('input[name="user.login"]', username);
         browser.fill('input[name="user.senha"]', password);
         browser.pressButton('input[value="Entrar"]', (res) => {
-            if(res !== null) {
+            if(res !== null && res.filename !== 'https://si3.ufc.br/sigaa/logar.do?dispatch=logOn:script') {
                 browser.visit('/sigaa/paginaInicial.do', (e) => {
                     browser.visit('/sigaa/verPortalDiscente.do', (e) => {
                         resolve(browser.document.documentElement.innerHTML)
