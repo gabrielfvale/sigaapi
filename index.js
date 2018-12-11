@@ -6,7 +6,8 @@ const Xray = require('x-ray');
 const app = express();
 
 const config = {
-    port: 8080,
+    port: process.env.OPENSHIFT_NODEJS_PORT || 8080,
+    ip: process.env.OPENSHIFT_NODEJS_IP || 'localhost',
     mongoURI: 'mongodb://test:test123@ds163013.mlab.com:63013/sigaapi',
     mongoCollection: 'users'
 }
@@ -82,7 +83,7 @@ app.get('/', (req, res) => {
 
 MongoClient.connect(config.mongoURI, { useNewUrlParser: true }, (err, client) => {
     db = client.db('sigaapi');
-    app.listen(config.port, () =>{
+    app.listen(config.port, config.ip, () =>{
         console.log(`API running on port ${config.port}`)
     });
 });
