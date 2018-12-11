@@ -6,7 +6,7 @@ const Xray = require('x-ray');
 const app = express();
 
 const config = {
-    port: 3000,
+    port: 8080,
     mongoURI: 'mongodb://test:test123@ds163013.mlab.com:63013/sigaapi',
     mongoCollection: 'users'
 }
