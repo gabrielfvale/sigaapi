@@ -6,8 +6,8 @@ const Xray = require('x-ray');
 const app = express();
 
 const config = {
-    port: process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip: process.env.OPENSHIFT_NODEJS_IP || 'localhost',
+    port: 8080,
+    ip: '0.0.0.0',
     mongoURI: 'mongodb://test:test123@ds163013.mlab.com:63013/sigaapi',
     mongoCollection: 'users'
 }
