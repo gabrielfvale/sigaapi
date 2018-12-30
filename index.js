@@ -1,8 +1,7 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
+const Browser = require('zombie');
 const Xray = require('x-ray');
-const Nightmare = require('nightmare')
-const nightmare = Nightmare({ show: false, waitTimeout: 2000 })
 
 const app = express();
 
@@ -24,21 +23,29 @@ const x = Xray({
     }
 });
 
+const browser = new Browser({
+    loadCSS: false,
+    loadScripts: false,
+    site: 'http://si3.ufc.br'
+});
+
 const access = (username, password) => {
     return new Promise ((resolve, reject) => {
-    nightmare
-        .goto('http://si3.ufc.br')
-        .insert('input[name="user.login"]', username)
-        .insert('input[name="user.senha"]', password)
-        .click('input[value="Entrar"]')
-        .wait('#info-usuario > div > div.nome_vinculo_deslogar_periodo > div.nome_vinculo_deslogar > div.nome_usuario > p')
-        .goto('https://si3.ufc.br/sigaa/verPortalDiscente.do')
-        .evaluate(() => document.querySelector('body').innerHTML)
-        .end()
-        .then((r) => resolve(r))
-        .catch(error => {
-            reject(error)
-        })
+        browser.visit('/', (e) => {
+        browser.fill('input[name="user.login"]', username);
+        browser.fill('input[name="user.senha"]', password);
+        browser.pressButton('input[value="Entrar"]', (res) => {
+            if(res !== null && res.filename !== 'https://si3.ufc.br/sigaa/logar.do?dispatch=logOn:script') {
+                browser.visit('/sigaa/paginaInicial.do', (e) => {
+                    browser.visit('/sigaa/verPortalDiscente.do', (e) => {
+                        resolve(browser.document.documentElement.innerHTML)
+                    })
+                })
+            } else {
+                reject(res.filename);
+            }
+        });
+    });
     }).catch(() => {});
 }
 
