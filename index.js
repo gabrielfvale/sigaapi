@@ -55,8 +55,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/sigaa', (req, res) => {
-    const username = req.query.u;
-    const pass = req.query.p;
+    const username = req.query.login;
+    const pass = req.query.senha;
     const start = Math.round(new Date() / 1000);
     sigaa(username, pass)
     .then(result => {
@@ -78,8 +78,8 @@ app.get('/sigaa', (req, res) => {
 });
 
 app.get('/creditos', (req, res) => {
-    const matricula = req.query.m;
-    const cartao = req.query.c;
+    const matricula = req.query.matricula;
+    const cartao = req.query.cartao;
     creditos(cartao, matricula)
     .then(result => {
         if(result) {
