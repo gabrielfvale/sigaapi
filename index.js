@@ -1,7 +1,10 @@
 const express = require('express');
 const MongoClient = require('mongodb').MongoClient;
 const Browser = require('zombie');
-const Xray = require('x-ray');
+
+const sigaa = require('./modules/sigaa');
+const creditos = require('./modules/creditos');
+const cardapio = require('./modules/cardapio');
 
 const app = express();
 
@@ -12,57 +15,15 @@ const config = {
     mongoCollection: 'users'
 }
 
-const x = Xray({
-    filters: {
-        trim: (value) => {
-            return value.trim();
-        },
-        fulltrim: (value) => {
-            return value.trim().replace(/\n/g, '').replace(/\t/g, '');
-        }
-    }
-});
-
-const browser = new Browser({
-    loadCSS: false,
-    loadScripts: false,
-    site: 'http://si3.ufc.br'
-});
-
-const access = (username, password) => {
-    return new Promise ((resolve, reject) => {
-        browser.visit('/', (e) => {
-        browser.fill('input[name="user.login"]', username);
-        browser.fill('input[name="user.senha"]', password);
-        browser.pressButton('input[value="Entrar"]', (res) => {
-            if(res !== null && res.filename !== 'https://si3.ufc.br/sigaa/logar.do?dispatch=logOn:script') {
-                browser.visit('/sigaa/paginaInicial.do', (e) => {
-                    browser.visit('/sigaa/verPortalDiscente.do', (e) => {
-                        resolve(browser.html())
-                    })
-                })
-            } else {
-                reject(res.filename);
-            }
-        });
-    });
-    }).catch(() => {});
-}
-
-const scrape = (html) => {
-    return x(html, {
-        name: '.nome_usuario | trim',
-        picture: '.foto img@src',
-        profile: x('#agenda-docente table', ['tr td:last-child | fulltrim']),
-        cadeiras: x('#turmas-portal table tbody', ['tr td.descricao a'])
-    });
-}
-
 app.get('/', (req, res) => {
-    const username = req.query.u;
-    const pass = req.query.p;
+    res.send('API para leitura remota de dados da Universidade Federal do Ceará');
+})
+
+app.get('/sigaa', (req, res) => {
+    const username = req.query.login;
+    const pass = req.query.senha;
     const start = Math.round(new Date() / 1000);
-    access(username, pass)
+    sigaa.access(username, pass)
     .then(result => {
         if(result) {
             db.collection(config.mongoCollection).findOne({ username: { $eq: username}}, (err, qres) => {
@@ -71,15 +32,35 @@ app.get('/', (req, res) => {
                         console.log(`Novo login de usuário! ${new Date()}`)
                     })};
                 res.setHeader('Content-Type', 'application/json; charset=utf-8');
-                scrape(result).write().pipe(res);
+                sigaa.scrape(result).write().pipe(res);
                 console.log("Done in " + (Math.round(new Date() / 1000) - start) + "s");
             })
         } else {
-            res.send({ error: 'Nome de usuário ou senha inválidos'})
+            res.send({ error: 'Nome de usuário ou senha inválidos'});
             console.log("Done in " + (Math.round(new Date() / 1000) - start) + "s");
         }
     });
 });
+
+app.get('/creditos', (req, res) => {
+    const matricula = req.query.matricula;
+    const cartao = req.query.cartao;
+    creditos.access(cartao, matricula)
+    .then(result => {
+        if(result) {
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            creditos.scrape(result).write().pipe(res);
+        } else {
+            res.send({ error: 'Matrícula ou número do cartão inválidos'});
+        }
+    });
+});
+
+app.get('/cardapio/:data?', (req, res) => {
+    const data = req.params.data;
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    cardapio.scrape(data).write().pipe(res);
+})
 
 MongoClient.connect(config.mongoURI, { useNewUrlParser: true }, (err, client) => {
     db = client.db('sigaapi');
