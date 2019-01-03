@@ -49,10 +49,19 @@ const access = (username, password) => {
 }
 
 const scrape = (html) => {
+    const _prefix = '#agenda-docente > table:nth-child(2) > tbody:nth-child(1) > ';
+    const _suffix = ' > td:nth-child(2) | fulltrim';
     return x(html, {
-        name: '.nome_usuario | trim',
-        picture: '.foto img@src',
-        profile: x('#agenda-docente table', ['tr td:last-child | fulltrim']),
+        nome: '.nome_usuario | trim',
+        URLfoto: '.foto img@src',
+        perfil: {
+            matricula: _prefix + 'tr:nth-child(1)' + _suffix,
+            curso: _prefix + 'tr:nth-child(2)' + _suffix,
+            nivel: _prefix + 'tr:nth-child(3)' + _suffix,
+            status: _prefix + 'tr:nth-child(4)' + _suffix,
+            entrada: _prefix + 'tr:nth-child(6)' + _suffix,
+            ch: _prefix + 'tr:nth-child(7) > td:nth-child(1) > table:nth-child(4) > tbody:nth-child(1) > tr:nth-child(1)' + _suffix
+        },
         cadeiras: x('#turmas-portal table tbody', ['tr td.descricao a'])
     });
 }
