@@ -37,7 +37,7 @@ const access = (username, password) => {
             if(res !== null && res.filename !== 'https://si3.ufc.br/sigaa/logar.do?dispatch=logOn:script') {
                 browser.visit('/sigaa/paginaInicial.do', (e) => {
                     browser.visit('/sigaa/verPortalDiscente.do', (e) => {
-                        resolve(browser.document.documentElement.innerHTML)
+                        resolve(browser.html())
                     })
                 })
             } else {
