@@ -8,7 +8,7 @@ const x = Xray({
 });
 
 module.exports = {
-    scrape: scrape = (data) => {
+    scrape: scrape = (data = '') => {
         const url = 'http://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/' + data;
         return x(url, {
             empty: '.c-cardapios table td | cardapio_empty',
