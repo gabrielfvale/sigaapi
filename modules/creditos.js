@@ -13,7 +13,7 @@ const x = Xray({
 });
 
 module.exports = {
-  access: access = (cartao, matricula) => {
+  access: access = async (cartao, matricula) => {
     return new Promise((resolve, reject) => {
       browser.visit('https://si3.ufc.br/public/iniciarConsultaSaldo.do', (e) => {
         browser.fill('input[name="codigoCartao"]', cartao);

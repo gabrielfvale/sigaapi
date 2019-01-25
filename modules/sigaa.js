@@ -14,33 +14,33 @@ const x = Xray({
 });
 
 module.exports = {
-  access: access = (username, password) => {
+  access: access = async (username, password) => {
     return new Promise((resolve, reject) => {
       browser.visit('/')
-        .then(() => { },
-          () => { // Rejection callback of '/'
-            browser.fill('input[name="user.login"]', username);
-            browser.fill('input[name="user.senha"]', password);
-            browser.pressButton('input[value="Entrar"]')
-              .then(() => { },
-                (res) => { // Rejection callback of '/sigaa/paginaInicial.do'
-                  if (res.filename === 'https://si3.ufc.br/sigaa/logar.do?dispatch=logOn:script') reject();
-                  else {
-                    browser.visit('/sigaa/paginaInicial.do')
-                      .then(() => { },
-                        () => {
-                          browser.visit('/sigaa/verPortalDiscente.do')
-                            .then(() => { },
-                              () => { // Rejection callback of '/sigaa/verPortalDiscente.do'
-                                const data = browser.html();
-                                browser.deleteCookies();
-                                browser.tabs.closeAll();
-                                resolve(data);
-                              })
-                        })
-                  }
+      .then(() => { },
+        () => { // Rejection callback of '/'
+          browser.fill('input[name="user.login"]', username);
+          browser.fill('input[name="user.senha"]', password);
+          browser.pressButton('input[value="Entrar"]')
+          .then(() => { },
+            (res) => { // Rejection callback of '/sigaa/paginaInicial.do'
+              if (res.filename === 'https://si3.ufc.br/sigaa/logar.do?dispatch=logOn:script') reject();
+              else {
+                browser.visit('/sigaa/paginaInicial.do')
+                .then(() => { },
+                () => {
+                  browser.visit('/sigaa/verPortalDiscente.do')
+                  .then(() => { },
+                  () => { // Rejection callback of '/sigaa/verPortalDiscente.do'
+                    const data = browser.html();
+                    browser.deleteCookies();
+                    browser.tabs.closeAll();
+                    resolve(data);
+                  })
                 })
-          });
+              }
+            })
+      });
     }).catch(() => { });
   },
 
