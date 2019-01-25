@@ -1,18 +1,18 @@
 const Browser = require('zombie');
 
-describe('User visits signup page', function() {
+describe('User visits signup page', function () {
 
   const browser = new Browser({
-      loadCSS: false,
-      loadScripts: false,
-      site: 'http://si3.ufc.br'
+    loadCSS: false,
+    loadScripts: false,
+    site: 'http://si3.ufc.br'
   });
 
   before(() => {
     return browser.visit('/');
   });
 
-  describe('submits form', function() {
+  describe('submits form', function () {
 
     before(() => {
       browser
