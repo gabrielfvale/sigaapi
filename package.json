@@ -6,6 +6,7 @@
   "author": "Gabriel Freire <gabrielfvale@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "mocha": "^5.2.0",
     "mongodb": "^3.1.10",

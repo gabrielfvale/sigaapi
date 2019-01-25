@@ -1,4 +1,6 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const MongoClient = require('mongodb').MongoClient;
 const Browser = require('zombie');
 
@@ -7,6 +9,8 @@ const creditos = require('./modules/creditos');
 const cardapio = require('./modules/cardapio');
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const config = {
   port: 3000,
@@ -18,16 +22,15 @@ app.get('/', (req, res) => {
   res.send('API para leitura remota de dados da Universidade Federal do Ceará');
 })
 
-app.get('/sigaa', async (req, res) => {
-  const username = req.query.login;
-  const pass = req.query.senha;
+app.post('/sigaa', async (req, res) => {
+  const { login, senha } = req.body;
   const start = Math.round(new Date() / 1000);
-  sigaa.access(username, pass)
+  sigaa.access(login, senha)
   .then(result => {
     if (result) {
-      db.collection(config.mongoCollection).findOne({ username: { $eq: username } }, (err, qres) => {
+      db.collection(config.mongoCollection).findOne({ username: { $eq: login } }, (err, qres) => {
         if (!qres) {
-          db.collection(config.mongoCollection).insertOne({ username: username, date: new Date().toUTCString() }, () => {
+          db.collection(config.mongoCollection).insertOne({ username: login, date: new Date().toUTCString() }, () => {
             console.log(`Novo login de usuário! ${new Date()}`)
           })
         };
@@ -42,9 +45,8 @@ app.get('/sigaa', async (req, res) => {
   });
 });
 
-app.get('/creditos', async (req, res) => {
-  const matricula = req.query.matricula;
-  const cartao = req.query.cartao;
+app.post('/creditos', async (req, res) => {
+  const { matricula, cartao } = req.body;
   creditos.access(cartao, matricula)
   .then(result => {
     if (result) {
