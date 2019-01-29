@@ -3,7 +3,7 @@ const cheerio = require('cheerio');
 const format = require('../util/format');
 
 module.exports = {
-  access: access = async (username, password) => {
+  access: access = async (login, senha) => {
     const baseURL = 'https://si3.ufc.br/sigaa/';
     let jar = request.jar();
     return new Promise((resolve, reject) => {
@@ -12,7 +12,10 @@ module.exports = {
         request.post(
           baseURL + 'logar.do?dispatch=logOn',
           {
-            form: { 'user.login': username, 'user.senha': password },
+            form: { 
+              'user.login': login, 
+              'user.senha': senha 
+            },
             headers: {
               'Referer': baseURL + 'verTelaLogin.do',
               'Cookie': cookie
@@ -38,7 +41,7 @@ module.exports = {
     }).catch(() => { });
   },
 
-  scrape: scrape = (html) => {
+  scrape: scrape = (html, login) => {
     if (typeof html === 'undefined') return {error: true}
     const $ = cheerio.load(html);
     const profile = (index) => format.full($(
@@ -46,6 +49,7 @@ module.exports = {
     ).text())
     return {
       error: false,
+      login: login,
       perfil: {
         nome: format.full($('.nome_usuario').text()),
         foto: 'https://si3.ufc.br' + $('.foto img').attr('src'),

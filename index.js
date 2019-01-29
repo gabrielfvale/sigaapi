@@ -21,7 +21,7 @@ app.post('/sigaa', (req, res) => {
   const { login, senha } = req.body;
   sigaa.access(login, senha)
   .then(response => {
-    res.send(sigaa.scrape(response));
+    res.send(sigaa.scrape(response, login));
   })
 });
 
