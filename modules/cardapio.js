@@ -1,41 +1,44 @@
-const Xray = require('x-ray');
-const x = Xray({
-  filters: {
-    trim: value => value.trim(),
-    fulltrim: value => value.trim().replace(/\n/g, '').replace(/\t/g, ''),
-    cardapio_empty: value => value === 'Bebidas' ? false : true
-  }
-});
+const request = require('request');
+const cheerio = require('cheerio');
+const format = require('../util/format');
 
 module.exports = {
-  scrape: scrape = (data = '') => {
-    const url = 'http://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/' + data;
-    return x(url, {
-      empty: '.c-cardapios table td | cardapio_empty',
-      cafe: {
-        bebidas: ['td.bebidas span[class="desc"]'],
-        paes: ['td.paes span[class="desc"]'],
-        frutas: ['td.frutas span[class="desc"]'],
-        especial: ['td.especial span[class="desc"]'],
-      },
-      almoco: {
-        principal: ['table.almoco td.principal span[class="desc"]'],
-        vegetariano: 'table.almoco td.vegetariano span[class="desc"]',
-        salada: 'table.almoco td.salada span[class="desc"]',
-        guarnicao: 'table.almoco td.guarnicao span[class="desc"]',
-        acmp: ['table.almoco td.acompanhamento span[class="desc"]'],
-        suco: 'table.almoco td.suco span[class="desc"]',
-        sobremesa: ['table.almoco td.sobremesa span[class="desc"]'],
-      },
-      jantar: {
-        principal: ['table.jantar td.principal span[class="desc"]'],
-        vegetariano: 'table.jantar td.vegetariano span[class="desc"]',
-        salada: 'table.jantar td.salada span[class="desc"]',
-        guarnicao: 'table.jantar td.guarnicao span[class="desc"]',
-        acmp: ['table.jantar td.acompanhamento span[class="desc"]'],
-        suco: 'table.jantar td.suco span[class="desc"]',
-        sobremesa: ['table.jantar td.sobremesa span[class="desc"]'],
-      },
+  access: access = (data = '') => {
+    return new Promise((resolve, reject) => {
+      const url = 'http://www.ufc.br/restaurante/cardapio/1-restaurante-universitario-de-fortaleza/' + data;
+      request.get({url: url}, (error, response, body) => {
+        if (error) reject();
+        resolve(body);
+      })
     })
+  },
+
+  scrape: scrape = (html) => {
+    if (typeof html === 'undefined') return {error: true}
+    const $ = cheerio.load(html);
+    const emptyText = $('.c-cardapios > div:nth-child(2) > table:nth-child(1) > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(1)').text();
+    const mealBuilder = meal => {
+      strbuilder = (type) => `table.${meal} td.${type} span[class="desc"]`;
+      return {
+        principal: $(strbuilder('principal')).map((i, el) => $(el).text()).get(),
+        vegetariano: $(strbuilder('vegetariano')).text(),
+        salada: $(strbuilder('salada')).text(),
+        guarnicao: $(strbuilder('guarnicao')).text(),
+        acompanhamento: $(strbuilder('acompanhamento')).map((i, el) => $(el).text()).get(),
+        suco: $(strbuilder('suco')).text(),
+        sobremesa: $(strbuilder('sobremesa')).map((i, el) => $(el).text()).get(),
+      }
+    }
+    return {
+      empty: emptyText ? true : false,
+      cafe: {
+        bebidas: $('td.bebidas span[class="desc"]').map((i, el) => $(el).text()).get(),
+        paes: $('td.paes span[class="desc"]').map((i, el) => $(el).text()).get(),
+        frutas: $('td.frutas span[class="desc"]').map((i, el) => $(el).text()).get(),
+        especial: $('td.especial span[class="desc"]').map((i, el) => $(el).text()).get(),
+      },
+      almoco: mealBuilder('almoco'),
+      jantar: mealBuilder('jantar')
+    }
   }
 }
