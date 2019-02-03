@@ -39,7 +39,7 @@ app.get('/cardapio/:data?', (req, res) => {
   .then(result => {
     res.send(cardapio.scrape(result));
   })
-})
+});
 
 app.listen(config.port, () => {
   console.log(`SIGAAPI serving on port ${config.port}`);

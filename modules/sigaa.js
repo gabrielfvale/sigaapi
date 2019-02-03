@@ -1,5 +1,6 @@
 const request = require('request');
 const cheerio = require('cheerio');
+const htmlToText = require('html-to-text');
 const format = require('../util/format');
 
 module.exports = {
@@ -64,10 +65,19 @@ module.exports = {
         children = $(c).children().toArray();
         if (children.length === 1) return;
         [codigo, componente] = format.full($(children[0]).text()).split(' - ');
+        // Crazy string manipulation starts here
+        const horario = htmlToText.fromString($(children[3]).html()).split('\n');
+        var dias = horario.slice(0, -1); // Just the day and hour
+        dias.map((e, i) => {dias[i] = e.split(' ')[0]}); // Replaces 'day hour' with 'day'
+        dias = dias.join('/');
+        // End of string manipulation
         return {
           codigo: codigo,
           componente: componente,
+          carga_horaria: (horario.length - 1) * 32,
           local: format.full($(children[2]).text()),
+          dias: dias,
+          horario: horario[0].split(' ')[1]
         }
       }).get()
     };
