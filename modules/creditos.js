@@ -16,7 +16,7 @@ module.exports = {
           if (error) reject(error);
           resolve(body);
         });
-    }).catch(() => { });
+    }).catch(() => {});
   },
 
   scrape: scrape = (html) => {
@@ -25,7 +25,7 @@ module.exports = {
     let creditos = $('tr.linhaImpar:nth-child(2) > td:nth-child(2)').text();
     return {
       error: creditos == '' ? true : false,
-      creditos: creditos,
+      creditos: parseInt(creditos),
       historico: $('table.listagem:nth-child(8) > tbody:nth-child(3) tr').map((i, el) => {
         children = $(el).children().toArray();
         return {

@@ -39,38 +39,36 @@ module.exports = {
             });
           });
       });
-    }).catch(() => { });
+    }).catch(() => {});
   },
 
   scrape: scrape = (html, login) => {
     if (typeof html === 'undefined') return {error: true}
     const $ = cheerio.load(html);
-    const profile = (index) => format.full($(
-      `#agenda-docente > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(${index}) > td:nth-child(2)`
-    ).text())
+    const profile = (index) => format.full(
+      $(`#agenda-docente > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(${index}) > td:nth-child(2)`)
+      .text());
     return {
       error: false,
       login: login,
-      perfil: {
-        nome: format.full($('.nome_usuario').text()),
-        foto: 'https://si3.ufc.br' + $('.foto img').attr('src'),
-        matricula: profile(1),
-        curso: profile(2),
-        nivel: profile(3),
-        status: profile(4),
-        entrada: profile(6),
-        semestre: $('.periodo p span').text()
-      },
+      nome: format.full($('.nome_usuario').text()),
+      foto: 'https://si3.ufc.br' + $('.foto img').attr('src'),
+      matricula: profile(1),
+      curso: profile(2),
+      nivel: profile(3),
+      status: profile(4),
+      entrada: profile(6),
+      semestre: $('.periodo p span').text(),
       cadeiras: $('#turmas-portal table tbody tr').map((i, c) => {
         children = $(c).children().toArray();
         if (children.length === 1) return;
         [codigo, componente] = format.full($(children[0]).text()).split(' - ');
-        // Crazy string manipulation starts here
+        /* Crazy string manipulation starts here */
         const horario = htmlToText.fromString($(children[3]).html()).split('\n');
         var dias = horario.slice(0, -1); // Just the day and hour
         dias.map((e, i) => {dias[i] = e.split(' ')[0]}); // Replaces 'day hour' with 'day'
         dias = dias.join('/');
-        // End of string manipulation
+        /* End of string manipulation */
         return {
           codigo: codigo,
           componente: componente,
