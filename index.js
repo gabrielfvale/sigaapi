@@ -9,10 +9,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const config = {
-  port: process.env.PORT || 3000,
-}
-
 app.get('/', (req, res) => {
   res.send('API para leitura remota de dados da Universidade Federal do Ceará');
 })
@@ -41,6 +37,10 @@ app.get('/cardapio/:data?', (req, res) => {
   })
 });
 
-app.listen(config.port, () => {
-  console.log(`SIGAAPI serving on port ${config.port}`);
+// Server para uso em testes
+app.listen(3000, () => {
+  console.log(`SIGAAPI serving on port 3000`);
 });
+
+// Serverless para uso no Now
+module.exports = app;
