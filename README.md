@@ -1,6 +1,6 @@
 # SIGAAPI 🎓 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
-[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
-API para leitura remota de dados da Universidade Federal do Ceará.
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com) \
+API para leitura remota de dados da Universidade Federal do Ceará. \
 No presente momento, esta aplicação permite acessar:
 * Dados de seu usuário do SIGAA, incluindo as cadeiras do semestre
 * Créditos disponíveis no RU e histórico de uso do cartão
