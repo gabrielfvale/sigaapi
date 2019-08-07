@@ -17,8 +17,9 @@ Parâmetros | Descrição
 ------------ | -------------
 login | login cadastrado no SIGAA
 senha | senha cadastrada no SIGAA
+
 **Response**
-```json
+```javascript
 {
   "error": false,
   "login": "login",
@@ -39,7 +40,7 @@ senha | senha cadastrada no SIGAA
       "dias": "TER/QUI",
       "horario": "10:00-12:00"
     },
-    ...
+    /* ... */
   ]
 }
 ```
@@ -52,8 +53,9 @@ Parâmetros | Descrição
 ------------ | -------------
 matricula | matricula atrelada ao cartão
 cartao | número do cartão
+
 **Response**
-```json
+```javascript
 {
   "error": false,
   "creditos": 2,
@@ -63,7 +65,7 @@ cartao | número do cartão
       "operacao": "Utilização do Cartão",
       "detalhes": "Refeição: Almoço"
     },
-    ...
+    /* ... */
   ]
 }
 ```
