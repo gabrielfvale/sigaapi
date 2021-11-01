@@ -6,12 +6,12 @@ No presente momento, esta aplicação permite acessar:
 * Créditos disponíveis no RU e histórico de uso do cartão
 * Cardápio do RU, sendo possível especificar a data
 
-**Link público para a API [https://sigaapi.cf](https://sigaapi.cf)**
+**Link público para a API [https://sigaapi.gabrielfvale.vercel.app](https://sigaapi.gabrielfvale.vercel.app)**
 ## Rotas
 ### /sigaa
 **Request**
 ```
-POST https://sigaapi.cf/sigaa
+POST https://sigaapi.gabrielfvale.vercel.app/sigaa
 ```
 Parâmetros | Descrição
 ------------ | -------------
@@ -47,7 +47,7 @@ senha | senha cadastrada no SIGAA
 ### /creditos
 **Request**
 ```
-POST https://sigaapi.cf/creditos
+POST https://sigaapi.gabrielfvale.vercel.app/creditos
 ```
 Parâmetros | Descrição
 ------------ | -------------
@@ -72,10 +72,10 @@ cartao | número do cartão
 ### /cardapio
 **Request**
 ```
-GET https://sigaapi.cf/cardapio
+GET https://sigaapi.gabrielfvale.vercel.app/cardapio
 ```
 ```
-GET https://sigaapi.cf/cardapio/yyyy-mm-dd
+GET https://sigaapi.gabrielfvale.vercel.app/cardapio/yyyy-mm-dd
 ```
 **Response**
 ```json
