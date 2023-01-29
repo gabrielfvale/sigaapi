@@ -1,4 +1,7 @@
-# SIGAAPI 🎓 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+# SIGAAPI 🎓
+
+**Nota**: Esse é um arquivo público de um projeto que não é mais mantido. Portanto, uma API de livre acesso não será disponibilizada.
+
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com) \
 API para leitura remota de dados da Universidade Federal do Ceará. \
 No presente momento, esta aplicação permite acessar:
@@ -6,12 +9,12 @@ No presente momento, esta aplicação permite acessar:
 * Créditos disponíveis no RU e histórico de uso do cartão
 * Cardápio do RU, sendo possível especificar a data
 
-**Link público para a API [https://sigaapi.gabrielfvale.vercel.app](https://sigaapi.gabrielfvale.vercel.app)**
+**Link público para a API [http://localhost:3000](http://localhost:3000)**
 ## Rotas
 ### /sigaa
 **Request**
 ```
-POST https://sigaapi.gabrielfvale.vercel.app/sigaa
+POST http://localhost:3000/sigaa
 ```
 Parâmetros | Descrição
 ------------ | -------------
@@ -47,7 +50,7 @@ senha | senha cadastrada no SIGAA
 ### /creditos
 **Request**
 ```
-POST https://sigaapi.gabrielfvale.vercel.app/creditos
+POST http://localhost:3000/creditos
 ```
 Parâmetros | Descrição
 ------------ | -------------
@@ -72,10 +75,10 @@ cartao | número do cartão
 ### /cardapio
 **Request**
 ```
-GET https://sigaapi.gabrielfvale.vercel.app/cardapio
+GET http://localhost:3000/cardapio
 ```
 ```
-GET https://sigaapi.gabrielfvale.vercel.app/cardapio/yyyy-mm-dd
+GET http://localhost:3000/cardapio/yyyy-mm-dd
 ```
 **Response**
 ```json

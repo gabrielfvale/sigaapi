@@ -13,7 +13,7 @@ const config = {
   port: process.env.PORT || 3000,
 }
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.send('API para leitura remota de dados da Universidade Federal do Ceará');
 })
 
